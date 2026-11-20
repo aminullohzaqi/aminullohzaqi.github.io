@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth light" x-data="{ dark: localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches), toggleTheme() { this.dark = !this.dark; if (this.dark) { document.documentElement.classList.add('dark'); document.documentElement.classList.remove('light'); localStorage.setItem('theme', 'dark'); } else { document.documentElement.classList.add('light'); document.documentElement.classList.remove('dark'); localStorage.setItem('theme', 'light'); } } }" x-init="if (dark) { document.documentElement.classList.add('dark'); document.documentElement.classList.remove('light'); } else { document.documentElement.classList.add('light'); document.documentElement.classList.remove('dark'); } window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => { if (!localStorage.getItem('theme')) { if (e.matches) { document.documentElement.classList.add('dark'); document.documentElement.classList.remove('light'); } else { document.documentElement.classList.add('light'); document.documentElement.classList.remove('dark'); } });">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aminulloh Zaqi | Engineering Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            bg: '#0a0e1a',
+                            card: '#111827',
+                            hover: '#1f2937',
+                            text: '#f9fafb',
+                            muted: '#9ca3af'
+                        },
+                        light: {
+                            bg: '#ffffff',
+                            card: '#f9fafb',
+                            hover: '#f0f2f5',
+                            text: '#111827',
+                            muted: '#6b7280'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .bg-grid-light { background-image: radial-gradient(#e5e7eb 1px, transparent 1px); background-size: 30px 30px; }
+        .bg-grid-dark { background-image: radial-gradient(#374151 1px, transparent 1px); background-size: 30px 30px; }
+        body.light { background-color: #ffffff; color: #111827; }
+        body.dark { background-color: #0a0e1a; color: #f9fafb; }
+        .bg-grid { transition: opacity 0.3s ease; }
+        body.light .bg-grid-light { opacity: 1; }
+        body.light .bg-grid-dark { opacity: 0; }
+        body.dark .bg-grid-dark { opacity: 1; }
+        body.dark .bg-grid-light { opacity: 0; }
+        .dark { background-color: #0a0e1a; color: #f9fafb; }
+        .dark .bg-white { background-color: #111827; }
+        .dark .bg-gray-50 { background-color: #1f2937; }
+        .dark .bg-gray-100 { background-color: #374151; }
+        .dark .bg-gray-200 { background-color: #4b5563; }
+        .dark .bg-gray-300 { background-color: #6b7280; }
+        .dark .bg-blue-50 { background-color: #1e3a8a; }
+        .dark .text-white { color: #f9fafb; }
+        .dark .text-gray-800 { color: #e5e7eb; }
+        .dark .text-gray-700 { color: #d1d5db; }
+        .dark .text-gray-600 { color: #9ca3af; }
+        .dark .text-gray-500 { color: #6b7280; }
+        .dark .text-gray-400 { color: #9ca3af; }
+        .dark .text-gray-300 { color: #9ca3af; }
+        .dark .text-gray-200 { color: #e5e7eb; }
+        .dark .text-gray-100 { color: #f3f4f6; }
+        .dark .text-black { color: #f9fafb; }
+        .dark .border-gray-100 { border-color: #1f2937; }
+        .dark .border-gray-200 { border-color: #374151; }
+        .dark .border-gray-300 { border-color: #4b5563; }
+        .dark .dark-dark-card { background-color: #111827; }
+        .dark .dark-dark-border { border-color: #374151; }
+        body { transition: background-color 0.3s ease, color 0.3s ease; }
+        .theme-toggle {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1rem;
+            z-index: 50;
+            background: #f3f4f6;
+            color: #374151;
+            border: 1px solid #d1d5db;
+            border-radius: 0.75rem;
+            padding: 0.75rem;
+            cursor: pointer;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            user-select: none;
+            transition: all 0.3s ease;
+        }
+        .theme-toggle:hover {
+            background: #e5e7eb;
+            transform: scale(1.05);
+        }
+        .dark .theme-toggle {
+            background: #374151;
+            color: #f9fafb;
+            border: 1px solid #4b5563;
+        }
+        .dark .theme-toggle:hover {
+            background: #4b5563;
+        }
+    </style>
+    <style>
+        .fade-section {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+    <script>
+        const translations = {
+            en: {
+                projects: "Projects", experience: "Experience", education: "Education",
+                certifications: "Certifications", skills: "Skills",
+                featuredProjects: "Featured Projects",
+                ptspTitle: "PTSP BMKG",
+                ptspDesc: "Integrated service platform for meteorological, climatological, and geophysical data requests, as well as MKG equipment calibration services. Streamlines request workflows and ensures data accessibility.",
+                sikermaTitle: "Sikerma BMKG",
+                sikermaDesc: "Operational cooperation coordination system managing BMKG's national and international partnerships. Facilitates structured collaboration, document management, and stakeholder engagement.",
+                image: "Image",
+                workExperience: "Work Experience", apr2022Present: "Apr 2022 - Present",
+                bmkg: "Badan Meteorologi, Klimatologi, dan Geofisika (BMKG)",
+                softwareDeveloper: "Software Developer",
+                devDesc: "Build scalable web applications, robust backends, and optimized database architectures. Full-stack engineering with Nuxt (frontend), Node.js & Golang (backend), RDBMS, and AI integration using TensorFlow for climate pattern analysis and sensor anomaly prediction.",
+                educationTitle: "Education", sep2017sep2021: "Sep 2017 - Sep 2021",
+                sulgradTitle: "Bachelor of Meteorology, Climatology, and Geophysics Instrumentation",
+                stmk: "Sekolah Tinggi Meteorologi, Klimatologi, dan Geofisika (STMKG), Jakarta",
+                hwSystem: "Hardware & IoT Systems:",
+                hwDesc: "Integration, calibration, and deployment of environmental sensors, microcontrollers, and data acquisition networks for real-time weather/climate monitoring.",
+                fsIntegration: "Full-Stack Software Integration:",
+                fsDesc: "Development of responsive web applications and relational database architecture (RDBMS) to collect, process, and visualize continuous sensor data streams.",
+                backendArch: "Backend & API Architecture:",
+                backendDesc: "Golang & Node.js for high-performance, low-latency backend systems handling large-scale meteorology telemetry.",
+                aiTech: "Advanced Technology & AI:",
+                aiDesc: "Integration of TensorFlow models for climate pattern analysis, data anomaly prediction, and sensor network efficiency improvement.",
+                techSkills: "Technical Skills", agenticAI: "Agentic AI Engineering",
+                aiIntro: "Developing autonomous AI systems that function as digital workers. Focus on tool integration, reasoning chains, and efficient workflow automation.",
+                autoAI: "Autonomous AI Framework", workflow: "Workflow Orchestration",
+                fullstack: "Full-Stack & Backend", devops: "DevOps & Infrastructure",
+                aiData: "AI / Data Science", languages: "Languages",
+                footer: "© 2026 Aminulloh Zaqi"
+            },
+            id: {
+                projects: "Proyek", experience: "Pengalaman", education: "Pendidikan",
+                certifications: "Sertifikasi", skills: "Keahlian",
+                featuredProjects: "Proyek Utama",
+                ptspTitle: "PTSP BMKG",
+                ptspDesc: "Platform layanan terintegrasi untuk permintaan data meteorologi, klimatologi, dan geofisika, serta layanan kalibrasi peralatan MKG. Mengoptimalkan alur kerja permohonan dan memastikan aksesibilitas data.",
+                sukses: "Sikerma BMKG",
+                suksesDesc: "Sistem koordinasi kerja sama operasional yang mengelola kemitraan BMKG baik di tingkat nasional maupun internasional. Memfasilitasi kolaborasi terstruktur, manajemen dokumen, dan keterlibatan para pemangku kepentingan.",
+                image: "Gambar",
+                workExperience: "Pengalaman Kerja", apr2022Present: "Apr 2022 - Sekarang",
+                bmkg: "Badan Meteorologi, Klimatologi, dan Geofisika (BMKG)",
+                softwareDeveloper: "Software Developer",
+                devDesc: "Membangun aplikasi web scalable, backend robust, dan arsitektur database teroptimasi. Full-stack engineering dengan Nuxt (frontend), Node.js & Golang (backend), RDBMS, dan integrasi AI menggunakan TensorFlow untuk analisis pola iklim dan prediksi anomali sensor.",
+                educationTitle: "Pendidikan", sep2017sep2021: "Sep 2017 - Sep 2021",
+                sulgradTitle: "Sarjana Meteorologi, Klimatologi, dan Geofisika Instrumentasi",
+                stmk: "Sekolah Tinggi Meteorologi, Klimatologi, dan Geofisika (STMKG), Jakarta",
+                hwSystem: "Hardware & IoT Systems:",
+                hwDesc: "Integrasi, kalibrasi, dan deployment sensor lingkungan, mikrokontroler, dan jaringan akuisisi data untuk monitoring cuaca/iklim real-time.",
+                fsIntegration: "Full-Stack Software Integration:",
+                fsDesc: "Pengembangan aplikasi web responsif dan arsitektur database relasional (RDBMS) untuk mengumpulkan, memproses, memvisualisasikan aliran data sensor berkelanjutan.",
+                backendArch: "Backend & API Architecture:",
+                backendDesc: "Golang & Node.js untuk sistem backend high-performance, low-latency yang menangani telemetri meteorologi skala besar.",
+                aiTech: "Advanced Technology & AI:",
+                aiDesc: "Integrasi model TensorFlow untuk analisis pola iklim, prediksi anomali data, dan peningkatan efisiensi jaringan sensor.",
+                techSkills: "Keahlian Teknis", agenticAI: "Agentic AI Engineering",
+                aiIntro: "Mengembangkan sistem AI otonom yang bekerja layaknya pekerja digital. Fokus pada integrasi tool, reasoning chain, dan workflow automation yang efisien.",
+                autoAI: "Framework AI Otonom", autoWorkflow: "Orkestrasi Workflow",
+                fullstack: "Full-Stack & Backend", devops: "DevOps & Infrastruktur",
+                aiData: "AI / Data Science", languages: "Bahasa",
+                footer: "© 2026 Aminulloh Zaqi"
+            }
+        };
+
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('langSwitch', () => ({
+                currentLang: 'en',
+                setLang(lang) {
+                    this.currentLang = lang;
+                    this.applyTranslations(lang);
+                },
+                applyTranslations(lang) {
+                    const t = translations[lang];
+                    if (!t) return;
+                    document.querySelectorAll('[data-i18n]').forEach(el => {
+                        const key = el.getAttribute('data-i18n');
+                        if (t[key] !== undefined) {
+                            el.textContent = t[key];
+                        }
+                    });
+                }
+            }));
+        });
+
+        // Fade-in on scroll
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.fade-section').forEach(section => {
+                observer.observe(section);
+            });
+        });
+    </script>
+</head>
+<body class="bg-gray-50 text-gray-900" x-data="langSwitch()" x-init="applyTranslations('en')">
+    <div class="bg-grid min-h-screen">
+        <nav class="max-w-5xl mx-auto px-6 py-10 flex justify-between items-center">
+            <div class="font-extrabold text-2xl tracking-tighter">AZ<span class="text-blue-600">.</span></div>
+            <div class="flex gap-8 text-sm font-semibold text-gray-600 items-center">
+                <a href="#projects" class="hover:text-black transition" data-i18n="projects">Projects</a>
+                <a href="#experience" class="hover:text-black transition" data-i18n="experience">Experience</a>
+                <a href="#education" class="hover:text-black transition" data-i18n="education">Education</a>
+                <a href="#certifications" class="hover:text-black transition" data-i18n="certifications">Certifications</a>
+                <a href="#skills" class="hover:text-black transition" data-i18n="skills">Skills</a>
+                <div class="flex bg-gray-200 rounded-full p-1">
+                    <button @click="setLang('en')" class="px-3 py-1 rounded-full text-xs font-bold transition-all" :class="currentLang === 'en' ? 'bg-white shadow-sm' : ''">EN</button>
+                    <button @click="setLang('id')" class="px-3 py-1 rounded-full text-xs font-bold transition-all" :class="currentLang === 'id' ? 'bg-white shadow-sm' : ''">ID</button>
+                </div>
+            </div>
+        </nav>
+
+        <header class="fade-section max-w-5xl mx-auto px-6 pt-10 pb-24">
+            <div class="flex items-center gap-12">
+                <div>
+                    <span class="inline-block px-4 py-1.5 rounded-full bg-blue-100 text-blue-700 text-xs font-bold uppercase tracking-widest mb-6">Software & AI Engineer</span>
+                    <h1 class="text-6xl md:text-7xl font-extrabold tracking-tighter mb-8 leading-[1.1]">
+                        System Architecture.<br> <span class="text-gray-400">Agentic AI Intelligence.</span>
+                    </h1>
+                    <p class="text-xl text-gray-600 max-w-xl mb-10 leading-relaxed">
+                        Aminulloh Zaqi, specializing in large-scale backend system development, infrastructure orchestration, and autonomous AI workflow development for operational efficiency.
+                    </p>
+                    <div class="flex flex-wrap gap-4 text-sm text-gray-600">
+                        <a href="mailto:aminulloh.zaqi@gmail.com" class="flex items-center gap-1 hover:text-blue-600">aminulloh.zaqi@gmail.com</a>
+                        <a href="https://www.linkedin.com/in/aminulloh-zaqi-536b5a238" target="_blank" class="flex items-center gap-1 hover:text-blue-600">LinkedIn</a>
+                        <span>BMKG, Jakarta</span>
+                    </div>
+                </div>
+                <div class="w-80 h-96 rounded-3xl overflow-hidden shadow-2xl border-4 border-white flex-shrink-0">
+                    <img src="assets/profile.jpg" alt="Aminulloh Zaqi" class="w-full h-full object-cover object-center">
+                </div>
+            </div>
+        </header>
+
+        <main class="max-w-5xl mx-auto px-6 pb-32">
+            <section id="projects" class="fade-section mb-32">
+                <h2 class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-12" data-i18n="featuredProjects">Featured Projects</h2>
+                
+                <div x-data="{ activeSlide: 1 }" class="bg-white p-8 md:p-10 rounded-3xl border border-gray-100 shadow-sm mb-12">
+                    <div class="grid md:grid-cols-2 gap-10">
+                        <div>
+                            <h3 class="text-3xl font-extrabold mb-4 tracking-tight" data-i18n="ptspTitle">PTSP BMKG</h3>
+                            <p class="text-gray-600 mb-6 leading-relaxed" data-i18n="ptspDesc">Integrated service platform for meteorological, climatological, and geophysical data requests, as well as MKG equipment calibration services. Streamlines request workflows and ensures data accessibility.</p>
+                            <div class="flex flex-wrap gap-2 mb-6">
+                                <span class="px-3 py-1 bg-blue-50 rounded-lg text-[11px] font-bold text-blue-700">Docker</span>
+                                <span class="px-3 py-1 bg-blue-50 rounded-lg text-[11px] font-bold text-blue-700">Nuxt 3</span>
+                                <span class="px-3 py-1 bg-blue-50 rounded-lg text-[11px] font-bold text-blue-700">Traefik</span>
+                                <span class="px-3 py-1 bg-blue-50 rounded-lg text-[11px] font-bold text-blue-700">Go/Node.js</span>
+                            </div>
+                        </div>
+                        <div class="relative rounded-2xl overflow-hidden bg-gray-100 aspect-video">
+                            <img x-show="activeSlide === 1" src="assets/ptsp_screenshot_1.png" alt="PTSP BMKG Dashboard" class="absolute inset-0 w-full h-full object-cover">
+                            <img x-show="activeSlide === 2" src="assets/ptsp_screenshot_2.png" alt="PTSP BMKG Services" class="absolute inset-0 w-full h-full object-cover">
+                            <img x-show="activeSlide === 3" src="assets/ptsp_screenshot_3.png" alt="PTSP BMKG Interface" class="absolute inset-0 w-full h-full object-cover">
+                            <button @click="activeSlide = activeSlide === 1 ? 3 : activeSlide - 1" class="absolute left-2 top-1/2 bg-white/50 p-2 rounded-full hover:bg-white/80 transition">←</button>
+                            <button @click="activeSlide = activeSlide === 3 ? 1 : activeSlide + 1" class="absolute right-2 top-1/2 bg-white/50 p-2 rounded-full hover:bg-white/80 transition">→</button>
+                            <div class="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
+                                <span x-show="activeSlide === 1" class="w-2 h-2 rounded-full bg-white shadow"></span>
+                                <span x-show="activeSlide === 2" class="w-2 h-2 rounded-full bg-white shadow"></span>
+                                <span x-show="activeSlide === 3" class="w-2 h-2 rounded-full bg-white shadow"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div x-data="{ activeSlide: 1 }" class="bg-white p-8 md:p-10 rounded-3xl border border-gray-100 shadow-sm">
+                    <div class="grid md:grid-cols-2 gap-10">
+                        <div>
+                            <h3 class="text-3xl font-extrabold mb-4 tracking-tight" data-i18n="sikermaTitle">Sikerma BMKG</h3>
+                            <p class="text-gray-600 mb-6 leading-relaxed" data-i18n="sikermaDesc">Operational cooperation coordination system managing BMKG's national and international partnerships. Facilitates structured collaboration, document management, and stakeholder engagement.</p>
+                            <div class="flex flex-wrap gap-2 mb-6">
+                                <span class="px-3 py-1 bg-blue-50 rounded-lg text-[11px] font-bold text-blue-700">Node.js (Hapi)</span>
+                                <span class="px-3 py-1 bg-blue-50 rounded-lg text-[11px] font-bold text-blue-700">PostgreSQL</span>
+                                <span class="px-3 py-1 bg-blue-50 rounded-lg text-[11px] font-bold text-blue-700">SeaweedFS</span>
+                                <span class="px-3 py-1 bg-blue-50 rounded-lg text-[11px] font-bold text-blue-700">Docker</span>
+                            </div>
+                        </div>
+                        <div class="relative rounded-2xl overflow-hidden bg-gray-100 aspect-video">
+                            <img x-show="activeSlide === 1" src="assets/sikerma_screenshot_1.png" alt="Sikerma BMKG Dashboard" class="absolute inset-0 w-full h-full object-cover">
+                            <img x-show="activeSlide === 2" src="assets/sikerma_screenshot_1.png" alt="Sikerma BMKG Services" class="absolute inset-0 w-full h-full object-cover">
+                            <img x-show="activeSlide === 3" src="assets/sikerma_screenshot_1.png" alt="Sikerma BMKG Interface" class="absolute inset-0 w-full h-full object-cover">
+                            <button @click="activeSlide = activeSlide === 1 ? 3 : activeSlide - 1" class="absolute left-2 top-1/2 bg-white/50 p-2 rounded-full hover:bg-white/80 transition">←</button>
+                            <button @click="activeSlide = activeSlide === 3 ? 1 : activeSlide + 1" class="absolute right-2 top-1/2 bg-white/50 p-2 rounded-full hover:bg-white/80 transition">→</button>
+                            <div class="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
+                                <span x-show="activeSlide === 1" class="w-2 h-2 rounded-full bg-white shadow"></span>
+                                <span x-show="activeSlide === 2" class="w-2 h-2 rounded-full bg-white shadow"></span>
+                                <span x-show="activeSlide === 3" class="w-2 h-2 rounded-full bg-white shadow"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="experience" class="fade-section mb-32">
+                <div class="grid md:grid-cols-3 gap-12">
+                    <div class="md:col-span-1">
+                        <h2 class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4" data-i18n="workExperience">Work Experience</h2>
+                    </div>
+                    <div class="md:col-span-2 space-y-12">
+                        <div class="border-l-2 border-blue-200 pl-6">
+                            <div class="flex items-center gap-4 mb-2">
+                                <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-bold" data-i18n="apr2022Present">Apr 2022 - Present</span>
+                                <span class="text-gray-500 text-sm" data-i18n="bmkg">Badan Meteorologi, Klimatologi, dan Geofisika (BMKG)</span>
+                            </div>
+                            <h3 class="text-2xl font-bold mb-3" data-i18n="softwareDeveloper">Software Developer</h3>
+                            <p class="text-gray-600 mb-4 leading-relaxed" data-i18n="devDesc">Build scalable web applications, robust backends, and optimized database architectures. Full-stack engineering with Nuxt (frontend), Node.js & Golang (backend), RDBMS, and AI integration using TensorFlow for climate pattern analysis and sensor anomaly prediction.</p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 bg-gray-100 rounded-lg text-[11px] font-bold text-gray-600">Nuxt / Vue</span>
+                                <span class="px-3 py-1 bg-gray-100 rounded-lg text-[11px] font-bold text-gray-600">Node.js / Golang</span>
+                                <span class="px-3 py-1 bg-gray-100 rounded-lg text-[11px] font-bold text-gray-600">PostgreSQL</span>
+                                <span class="px-3 py-1 bg-gray-100 rounded-lg text-[11px] font-bold text-gray-600">TensorFlow</span>
+                                <span class="px-3 py-1 bg-gray-100 rounded-lg text-[11px] font-bold text-gray-600">Docker / Microservices</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="education" class="fade-section mb-32">
+                <div class="grid md:grid-cols-3 gap-12">
+                    <div class="md:col-span-1">
+                        <h2 class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4" data-i18n="educationTitle">Education</h2>
+                    </div>
+                    <div class="md:col-span-2 space-y-12">
+                        <div class="border-l-2 border-blue-200 pl-6">
+                            <div class="flex items-center gap-4 mb-2">
+                                <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-bold" data-i18n="sep2017sep2021">Sep 2017 - Sep 2021</span>
+                            </div>
+                            <h3 class="text-2xl font-bold mb-3" data-i18n="sulgradTitle">Bachelor of Meteorology, Climatology, and Geophysics Instrumentation</h3>
+                            <p class="text-gray-600 mb-2" data-i18n="stmk">Sekolah Tinggi Meteorologi, Klimatologi, dan Geofisika (STMKG), Jakarta</p>
+                            <div class="space-y-3 text-gray-600 text-sm leading-relaxed">
+                                <div>
+                                    <strong class="text-gray-900" data-i18n="hwSystem">Hardware & IoT Systems:</strong>
+                                    <span data-i18n="hwDesc">Integration, calibration, and deployment of environmental sensors, microcontrollers, and data acquisition networks for real-time weather/climate monitoring.</span>
+                                </div>
+                                <div>
+                                    <strong class="text-gray-900" data-i18n="fsIntegration">Full-Stack Software Integration:</strong>
+                                    <span data-i18n="fsDesc">Development of responsive web applications and relational database architecture (RDBMS) to collect, process, and visualize continuous sensor data streams.</span>
+                                </div>
+                                <div>
+                                    <strong class="text-gray-900" data-i18n="backendArch">Backend & API Architecture:</strong>
+                                    <span data-i18n="backendDesc">Golang & Node.js for high-performance, low-latency backend systems handling large-scale meteorology telemetry.</span>
+                                </div>
+                                <div>
+                                    <strong class="text-gray-900" data-i18n="aiTech">Advanced Technology & AI:</strong>
+                                    <span data-i18n="aiDesc">Integration of TensorFlow models for climate pattern analysis, data anomaly prediction, and sensor network efficiency improvement.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="certifications" class="fade-section mb-32">
+                <div class="grid md:grid-cols-3 gap-12">
+                    <div class="md:col-span-1">
+                        <h2 class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4" data-i18n="certifications">Certifications</h2>
+                    </div>
+                    <div class="md:col-span-2">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <a href="https://www.dicoding.com/certificates/1OP8RN2QVZQK" target="_blank" class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition group">
+                                <div class="font-bold text-blue-600 mb-1 group-hover:text-blue-700">Learning Math for Data Science</div>
+                                <div class="text-xs text-gray-500">Dicoding Academy · 2026</div>
+                            </a>
+                            <a href="https://www.dicoding.com/certificates/EYX4K4565PDL" target="_blank" class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition group">
+                                <div class="font-bold text-blue-600 mb-1 group-hover:text-blue-700">Data Analysis Fundamentals</div>
+                                <div class="text-xs text-gray-500">Dicoding Academy · 2026</div>
+                            </a>
+                            <a href="https://www.dicoding.com/certificates/GRX5W2W4KZ0M" target="_blank" class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition group">
+                                <div class="font-bold text-blue-600 mb-1 group-hover:text-blue-700">Application of Data Science</div>
+                                <div class="text-xs text-gray-500">Dicoding Academy · 2026</div>
+                            </a>
+                            <a href="https://www.dicoding.com/certificates/ERZR24MMQPYV" target="_blank" class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition group">
+                                <div class="font-bold text-blue-600 mb-1 group-hover:text-blue-700">Deep Learning Fundamentals</div>
+                                <div class="text-xs text-gray-500">Dicoding Academy · 2025</div>
+                            </a>
+                            <a href="https://www.dicoding.com/certificates/72ZD51V7LZYW" target="_blank" class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition group">
+                                <div class="font-bold text-blue-600 mb-1 group-hover:text-blue-700">Use of Generative AI</div>
+                                <div class="text-xs text-gray-500">Dicoding Academy · 2025</div>
+                            </a>
+                            <a href="https://www.dicoding.com/certificates/MRZMY3KKKZYQ" target="_blank" class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition group">
+                                <div class="font-bold text-blue-600 mb-1 group-hover:text-blue-700">Front-End Web Developer Expert</div>
+                                <div class="text-xs text-gray-500">Dicoding Academy · 2024</div>
+                            </a>
+                            <a href="https://www.dicoding.com/certificates/6RPNWR5WQP2M" target="_blank" class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition group">
+                                <div class="font-bold text-blue-600 mb-1 group-hover:text-blue-700">Building a Microservices Architecture</div>
+                                <div class="text-xs text-gray-500">Dicoding Academy · 2023</div>
+                            </a>
+                            <a href="https://www.dicoding.com/certificates/6RPNWW904P2M" target="_blank" class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition group">
+                                <div class="font-bold text-blue-600 mb-1 group-hover:text-blue-700">CI/CD Implementation</div>
+                                <div class="text-xs text-gray-500">Dicoding Academy · 2023</div>
+                            </a>
+                            <a href="https://www.dicoding.com/certificates/2VX3J1G84PYQ" target="_blank" class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition group">
+                                <div class="font-bold text-blue-600 mb-1 group-hover:text-blue-700">Linux System Administrator</div>
+                                <div class="text-xs text-gray-500">Dicoding Academy · 2023</div>
+                            </a>
+                            <a href="https://www.dicoding.com/certificates/1RXYYKGQ9XVM" target="_blank" class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition group">
+                                <div class="font-bold text-blue-600 mb-1 group-hover:text-blue-700">Fundamental Backend Application</div>
+                                <div class="text-xs text-gray-500">Dicoding Academy · 2022</div>
+                            </a>
+                            <a href="#" class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition group">
+                                <div class="font-bold text-blue-600 mb-1 group-hover:text-blue-700">Python</div>
+                                <div class="text-xs text-gray-500">Ministry of Communication and Digital · 2023</div>
+                            </a>
+                            <a href="#" class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition group">
+                                <div class="font-bold text-blue-600 mb-1 group-hover:text-blue-700">Cybersecurity Essentials</div>
+                                <div class="text-xs text-gray-500">Cisco · 2021</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="skills" class="fade-section mb-32">
+                <div class="grid md:grid-cols-3 gap-12">
+                    <div class="md:col-span-1">
+                        <h2 class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4" data-i18n="techSkills">Technical Skills</h2>
+                    </div>
+                    <div class="md:col-span-2 space-y-12">
+                        <div>
+                            <h3 class="text-xl font-bold mb-6" data-i18n="agenticAI">Agentic AI Engineering</h3>
+                            <p class="text-gray-600 mb-6 leading-relaxed" data-i18n="aiIntro">Developing autonomous AI systems that function as digital workers. Focus on tool integration, reasoning chains, and efficient workflow automation.</p>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="p-4 bg-white rounded-2xl border border-gray-100 shadow-sm">
+                                    <div class="font-bold text-blue-600 mb-1">Hermes Agent</div>
+                                    <div class="text-xs text-gray-500" data-i18n="autoAI">Autonomous AI Framework</div>
+                                </div>
+                                <div class="p-4 bg-white rounded-2xl border border-gray-100 shadow-sm">
+                                    <div class="font-bold text-blue-600 mb-1">9router</div>
+                                    <div class="text-xs text-gray-500" data-i18n="autoWorkflow">Workflow Orchestration</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold mb-6" data-i18n="fullstack">Full-Stack & Backend</h3>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 bg-blue-50 rounded-lg text-[11px] font-bold text-blue-700">Nuxt 3 / Vue 3</span>
+                                <span class="px-3 py-1 bg-blue-50 rounded-lg text-[11px] font-bold text-blue-700">Node.js (Hapi/Express)</span>
+                                <span class="px-3 py-1 bg-blue-50 rounded-lg text-[11px] font-bold text-blue-700">Golang</span>
+                                <span class="px-3 py-1 bg-blue-50 rounded-lg text-[11px] font-bold text-blue-700">TypeScript</span>
+                                <span class="px-3 py-1 bg-blue-50 rounded-lg text-[11px] font-bold text-blue-700">PostgreSQL</span>
+                                <span class="px-3 py-1 bg-blue-50 rounded-lg text-[11px] font-bold text-blue-700">Redis</span>
+                                <span class="px-3 py-1 bg-blue-50 rounded-lg text-[11px] font-bold text-blue-700">REST / gRPC</span>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold mb-6" data-i18n="devops">DevOps & Infrastructure</h3>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 bg-blue-50 rounded-lg text-[11px] font-bold text-blue-700">Docker / Compose</span>
+                                <span class="px-3 py-1 bg-blue-50 rounded-lg text-[11px] font-bold text-blue-700">Kubernetes</span>
+                                <span class="px-3 py-1 bg-blue-50 rounded-lg text-[11px] font-bold text-blue-700">Traefik / Nginx</span>
+                                <span class="px-3 py-1 bg-blue-50 rounded-lg text-[11px] font-bold text-blue-700">CI/CD (GitHub Actions)</span>
+                                <span class="px-3 py-1 bg-blue-50 rounded-lg text-[11px] font-bold text-blue-700">Linux Admin</span>
+                                <span class="px-3 py-1 bg-blue-50 rounded-lg text-[11px] font-bold text-blue-700">Systemd</span>
+                                <span class="px-3 py-1 bg-blue-50 rounded-lg text-[11px] font-bold text-blue-700">SeaweedFS</span>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold mb-6" data-i18n="aiData">AI / Data Science</h3>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 bg-blue-50 rounded-lg text-[11px] font-bold text-blue-700">TensorFlow</span>
+                                <span class="px-3 py-1 bg-blue-50 rounded-lg text-[11px] font-bold text-blue-700">Deep Learning</span>
+                                <span class="px-3 py-1 bg-blue-50 rounded-lg text-[11px] font-bold text-blue-700">Generative AI</span>
+                                <span class="px-3 py-1 bg-blue-50 rounded-lg text-[11px] font-bold text-blue-700">Data Analysis</span>
+                                <span class="px-3 py-1 bg-blue-50 rounded-lg text-[11px] font-bold text-blue-700">Python</span>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold mb-6" data-i18n="languages">Languages</h3>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 bg-gray-100 rounded-lg text-[11px] font-bold text-gray-600">Indonesia (Native)</span>
+                                <span class="px-3 py-1 bg-gray-100 rounded-lg text-[11px] font-bold text-gray-600">English (Proficient)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <!-- Theme Toggle Button -->
+        <button 
+            @click="toggleTheme()" 
+            x-show="!dark"
+            class="fixed bottom-4 right-4 z-50 p-3 bg-gray-200 dark:bg-gray-800 rounded-full shadow-lg hover:bg-gray-300 dark:hover:bg-gray-700 transition-all"
+            title="Switch to dark mode">
+            🌙
+        </button>
+        <button 
+            @click="toggleTheme()" 
+            x-show="dark"
+            class="fixed bottom-4 right-4 z-50 p-3 bg-gray-800 rounded-full shadow-lg hover:bg-gray-700 transition-all"
+            title="Switch to light mode">
+            ☀️
+        </button>
+        
+        <footer class="max-w-5xl mx-auto px-6 py-12 border-t border-gray-200 dark:border-gray-700 text-center text-gray-500 dark:text-gray-400 text-sm font-semibold" data-i18n="footer">© 2026 Aminulloh Zaqi</footer>
+    </div>
+</body>
+</html>
